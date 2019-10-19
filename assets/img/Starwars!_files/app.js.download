@@ -1,0 +1,144 @@
+/*
+
+There are three different locations (divs) for the game. 
+1. Staging area:
+    a. at the begining of the game the staging area is populated with all characters.
+    b. a player is to choose which character they want to play as.
+    c. once a player has chosen a character the chosen character is moved to the next staging area.
+
+    challenges:
+        - populate the area with characters.
+        - when a character is selected, change the status of all characters to either enemy or player.
+        - move each character around based on their status as either enemy or player.
+
+How to move characters once selected:
+    Store the HTML of each character on the character object. 
+
+
+
+
+
+2. Staging area II: choose enemy.
+    a. chosen character is in one div.
+    b. enemy characters are in another div. 
+    c. player is to choose which character they want their character to fight.
+
+    challenges: 
+        - when an enemy character is selected, change their status to selected and move them to a new area to fight.
+        - make the selected character fightable. 
+
+
+
+3. 
+
+*/
+
+
+
+
+/* class */
+class Player {
+    constructor(name, img, hp, attack, blurb, val, status) {
+        Object.assign(this, {
+            name,
+            img,
+            hp,
+            attack,
+            blurb,
+            val
+        });
+        this.attackBonus = 0;
+        this.alive = true;
+        this.status = "choose-character"
+    }
+    strike(target) {
+        target.hp -= (this.attack + this.attackBonus);
+        target.hp > 0 ? this.hp -= target.attack : target.alive = false;
+        this.attackBonus *= 1.1;
+    }
+};
+
+//instantiate class to create characters
+let characters = {
+    obiWanKenobi: new Player(
+        "Obi-Wan Kenobi",
+        "obi_wan_kenobi.webp",
+        120,
+        10,
+        "Loves italian food",
+        "obiWanKenobi"),
+
+    lukeSkywalker: new Player(
+        "Luke Skywalker",
+        "luke_skywalker.png",
+        80,
+        10,
+        "Hates his father.",
+        "lukeSkywalker"),
+
+    darthMaul: new Player(
+        "Darth Maul",
+        "darth_maul.jfif",
+        110,
+        10,
+        "Has a dog named 'Bingo.'",
+        "darthMaul", ),
+
+    darthSidious: new Player(
+        "Darth Sidious",
+        "darth_sidious.jpeg",
+        100,
+        10,
+        "Writes haikus.",
+        "darthSidious")
+}
+
+/* helper functions */
+const initialize = () => {
+    $("#choose-character").empty();
+    $("#choose-enemy").empty();
+    $("#fight-enemy").empty();
+
+    Object.values(characters).map((char, idx) => {
+        console.log("testing")
+        //creates card
+
+        let $cardHTML =
+            `<div class="card" style="width: 18rem;" id="player-${idx}">
+                <img class="card-img-top" src="./assets/img/${char.img}" alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title">${char.name}</h5>
+                    <p class="card-text">${char.blurb}</p>
+                    <p class="text-muted">Atk: ${char.attack} | HP: ${char.hp}</p>
+                    <a href="#" class="btn btn-primary"  id="" value="${char.val}">Select player</a>
+                </div>
+            </div>`;
+        //"wherever you are, there you go."
+        $(`#player-${idx}`).remove();
+        let playerStatus = char.status; //is either: "choose-character" | "player-chosen' | ""choose-enemy" | "enemy-chosen" | "graveyard" 
+        //"wherever you go, there you are."
+        $(`#${playerStatus}`).append($cardHTML);
+    });
+    eventListeners();
+};
+
+
+
+
+const eventListeners = () => {
+
+        
+        $("a.btn#player-select").click(function () {
+            let playerSelected = characters[$(this)[0].attributes[3].value];
+            console.log("click", playerSelected);
+
+            console.log($(this)[0].attributes[3].value);
+            Object.values(characters).forEach(char => char.status = "choose-enemy");
+            playerSelected.status = "player-chosen";
+            initialize();
+        });
+}
+
+
+/* initialize page */
+initialize();

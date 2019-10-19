@@ -1,0 +1,21 @@
+
+.container {
+
+    }
+
+div {
+    padding: 10px
+}
+
+.card {
+    padding: 10px
+}
+
+#choose-character,
+#player-chosen,
+#choose-enemy,
+#enemy-chosen,
+#graveyard {
+    display: inline-flex;
+    flex-wrap: wrap;
+}
